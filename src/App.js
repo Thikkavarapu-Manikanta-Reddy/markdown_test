@@ -3,16 +3,48 @@ import './App.css';
 import { useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import MarkdownTest from './test.md';
+import testBib from "./test.bib";
+import {parseBibFile} from "bibtex";
+import {BibtexParser} from "bibtex-js-parser";
 
 function App() {
 
-  const [markdown, setmarkdown] = useState('');
+const [markdown, setmarkdown] = useState('');
+const [bibText, setbibText] = useState('');
 
-  useEffect(() => {
-    fetch(MarkdownTest).then((res) => res.text()).then((md) => {
-        setmarkdown(md);
-    });
-  })
+let bibJSON;
+let bibJSONString;
+ 
+const bibFile = parseBibFile(`
+ 
+@InProceedings{mut2011,
+  author    = {Pradeep Muthukrishnan and Dragomir Radev and Qiaozhu Mei},
+  title     = {Simultaneous Similarity Learning and Feature-Weight Learning for Document Clustering},
+  booktitle = {Proceedings of TextGraphs-6: Graph-based Methods for Natural Language Processing},
+  month     = {June},
+  year      = {2011},
+  address   = {Portland, Oregon},
+  publisher = {Association for Computational Linguistics},
+  url       = {http://www.aclweb.org/anthology/W11-1107},
+  pages = {42--50}
+}
+`);
+
+useEffect(() => {
+  fetch(MarkdownTest).then((res) => res.text()).then((md) => {
+      setmarkdown(md);
+  });
+  fetch(testBib).then((res) => res.text()).then((bib) => {
+    console.log(bib);
+
+    bibJSON = BibtexParser.parseToJSON(bib);
+    bibJSONString = BibtexParser.parseToJSONString(bib);
+
+    console.log(bibJSON, bibJSONString);
+    setbibText(bib);
+});
+})
+  
   return (
     <div className="App">
       <header className="App-header">
@@ -28,6 +60,7 @@ function App() {
         >
           Learn React
         </a>
+        <ReactMarkdown children={bibText}></ReactMarkdown>
         <ReactMarkdown children={markdown}></ReactMarkdown>
       </header>
     </div>
