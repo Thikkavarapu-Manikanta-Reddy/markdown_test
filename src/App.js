@@ -4,16 +4,13 @@ import { useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import MarkdownTest from './test.md';
 import testBib from "./test.bib";
-import {parseBibFile} from "bibtex";
+// import {parseBibFile} from "bibtex";
 import {BibtexParser} from "bibtex-js-parser";
 
 function App() {
 
 const [markdown, setmarkdown] = useState('');
 const [bibText, setbibText] = useState('');
-
-let bibJSON;
-let bibJSONString;
  
 // const bibFile = parseBibFile(`
  
@@ -36,11 +33,7 @@ useEffect(() => {
   });
   fetch(testBib).then((res) => res.text()).then((bib) => {
     console.log(bib);
-
-    bibJSON = BibtexParser.parseToJSON(bib);
-    bibJSONString = BibtexParser.parseToJSONString(bib);
-
-    console.log(bibJSON, bibJSONString);
+    console.log(BibtexParser.parseToJSON(bib), BibtexParser.parseToJSONString(bib));
     setbibText(bib);
 });
 })
